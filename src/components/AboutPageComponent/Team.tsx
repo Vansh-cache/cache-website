@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Linkedin } from "lucide-react";
 
 interface TeamMember {
   id: number;
@@ -31,7 +32,7 @@ const TeamSection: React.FC = () => {
   ];
 
   // Determine how many columns in each breakpoint
-  const getColumns = (screen: "mobile" | "desktop") => (screen === "mobile" ? 3 : 4);
+  const getColumns = (screen: "mobile" | "desktop") => (screen === "mobile" ? 2 : 4);
 
   return (
     <section className="py-12 sm:py-16 bg-white">
@@ -47,7 +48,7 @@ const TeamSection: React.FC = () => {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
           {teamMembers.map((member, idx) => {
             // For centering last row
             const desktopCols = getColumns("desktop");
@@ -86,7 +87,7 @@ const TeamSection: React.FC = () => {
                 </Link>
 
                 {/* Info */}
-                <div className="mt-3 sm:mt-4 w-full flex flex-col flex-1">
+                <div className="relative top-5 sm:mt-4 w-full flex flex-col flex-1">
                   <div className="w-full h-[72px] sm:h-[80px] md:h-[96px] flex flex-col justify-center">
                     <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 mb-1">
                       {member.name}
@@ -104,15 +105,7 @@ const TeamSection: React.FC = () => {
                         className="inline-flex items-center rounded-md overflow-hidden transition-transform hover:scale-110 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         aria-label={`${member.name} LinkedIn profile`}
                       >
-                        <img
-                          src="/linkedin-transparent.png"
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src = '/linkedin.png';
-                          }}
-                          alt="LinkedIn"
-                          className="w-6 h-6"
-                        />
+                        <Linkedin className="w-5 h-5 mb-3" />
                       </a>
                     </div>
                   )}

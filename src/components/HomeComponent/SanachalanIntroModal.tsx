@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -66,7 +66,7 @@ export default function SanachalanIntroModal() {
             onClick={() => {
               setClosedForSession(true);
               setOpen(false);
-              navigate("/grc-dashboard");
+              navigate("/campaigns");
             }}
           >
           Go to GRC Dashboard

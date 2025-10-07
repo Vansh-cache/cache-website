@@ -43,3 +43,32 @@
   --font-glacial: "Glacial Indifference", sans-serif;
   --font-holiday: "Holiday", sans-serif;
 }
+
+/* Mobile spacing fix: separate LinkedIn icon from text in team cards */
+@media (max-width: 640px) {
+  a[aria-label$="LinkedIn profile"] {
+    margin-top: 0.5rem; /* adds breathing room above the icon on mobile */
+  }
+  /* Stronger override to adjust the container margin above the icon */
+  .mt-2.flex.justify-center {
+    margin-top: 0.75rem !important;
+  }
+  /* Remove extra top margin from the Lucide LinkedIn icon on mobile */
+  svg.mt-2 {
+    margin-top: 0 !important;
+  }
+}
+
+/* Team card alignment fixes (desktop and mobile) */
+/* Neutralize the relative top offset and use margin for spacing */
+@media (min-width: 640px) {
+  .relative.top-5.w-full.flex.flex-col.flex-1 {
+    top: 0 !important;
+    margin-top: 0.75rem !important;
+  }
+}
+
+/* Align name and designation to start within fixed-height container */
+.h-\[72px\].flex.flex-col.justify-center {
+  justify-content: flex-start !important;
+}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { X, Send, MessageCircle, Bot, Sparkles } from 'lucide-react';
 
 interface Message {
@@ -6,6 +6,14 @@ interface Message {
   text: string;
   isUser: boolean;
   timestamp: Date;
+}
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'dotlottie-wc': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+    }
+  }
 }
 
 const Chatbot: React.FC = () => {
@@ -19,6 +27,18 @@ const Chatbot: React.FC = () => {
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js';
+    script.type = 'module';
+    script.defer = true;
+    document.head.appendChild(script);
+
+    return () => {
+      if (script.parentNode) script.parentNode.removeChild(script);
+    };
+  }, []);
 
   const toggleChat = () => {
     console.log('Chatbot clicked, current state:', isOpen);
@@ -39,7 +59,6 @@ const Chatbot: React.FC = () => {
     setMessages(prev => [...prev, newMessage]);
     setInputMessage('');
 
-    // Simulate bot response with "Coming Soon" message
     setTimeout(() => {
       const botResponse: Message = {
         id: messages.length + 2,
@@ -160,7 +179,12 @@ const Chatbot: React.FC = () => {
             type="button"
           >
             <div className="relative">
-              <Bot className="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-300" />
+              <dotlottie-wc
+                src="https://lottie.host/414db54c-14fd-4a7f-b059-194cd910d0a7/qmFZIy2Mux.lottie"
+                autoplay
+                loop
+                style="width: 48px; height: 48px;"
+              ></dotlottie-wc>
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
             </div>
           </button>

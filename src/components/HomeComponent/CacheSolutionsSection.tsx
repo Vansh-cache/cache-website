@@ -343,9 +343,9 @@ export default function CacheSolutionsSection() {
             <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-4">
               Let Cache Solve your Problems
             </h1>
-            <p className="text-white/80 mt-6 text-lg">
+            {/* <p className="text-white/80 mt-6 text-lg">
               While you maximize your growth
-            </p>
+            </p> */}
           </div>
 
           {/* Choose your interest text */}
@@ -377,7 +377,7 @@ export default function CacheSolutionsSection() {
                  <AnimatePresence>
                    {capabilitiesOpen && (
                      <motion.div 
-                       className="absolute top-full left-0 right-0 mt-2 bg-black border border-white/30 rounded-lg shadow-lg z-10"
+                       className="absolute top-full left-0 right-0 mt-2 bg-black border border-white/30 rounded-lg shadow-lg z-100"
                        variants={dropdownVariants}
                        initial="hidden"
                        animate="visible"
@@ -447,7 +447,7 @@ export default function CacheSolutionsSection() {
                 <AnimatePresence>
                   {caseStudiesOpen && (
                     <motion.div 
-                      className="absolute top-full left-0 right-0 mt-2 bg-black border border-white/30 rounded-lg shadow-lg z-10"
+                      className="absolute top-full left-0 right-0 mt-2 bg-black border border-white/30 rounded-lg shadow-lg z-100"
                       variants={dropdownVariants}
                       initial="hidden"
                       animate="visible"
@@ -481,7 +481,7 @@ export default function CacheSolutionsSection() {
       }}>
               {/* Handshake Image (use requested asset) */}
               <img 
-                src="public/girl-hand.jpg" 
+                src="/public/girl-hand.jpg" 
                 alt="Business handshake" 
                 className="absolute inset-0 w-full h-full object-cover" 
                 loading="lazy"

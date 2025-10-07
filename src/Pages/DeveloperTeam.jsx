@@ -13,37 +13,15 @@ const DeveloperTeam = () => {
     {
       id: 1,
       name: "Anil Kumar",
-      role: "FUll Stack Developer",
+      role: "FUll Stack & Cloud Engineer",
       photo: "/Developer/anil1.jpg",
       linkedin: "https://linkedin.com/in/anil-kumar85",
       github: "https://github.com/anil29717",
       email: "anilkumar.gugm@gmail.com",
       skills: ["MongoDb", "ReactJs", "Cloud GCP"]
     },
-    
     {
-      id: 3,
-      name: "Devender Singh",
-      role: "Full Stack & DevOps Engineer",
-      photo: "/Developer/devender.jpg",
-      linkedin: "https://linkedin.com/in/davidkim",
-      github: "https://github.com/davidkim",
-      email: "david@company.com",
-      skills: ["ReactJs Vite", "AWS", "Azure"]
-    },
-    
-    {
-      id: 4,
-      name: "Rishabh ",
-      role: "Lead Full-Stack Developer",
-      photo: "/Developer/rishabh.JPG",
-      linkedin: "#",
-      github: "#",
-      email: "#",
-      skills: ["React", "Node.js", "TypeScript"]
-    },
-    {
-      id: 5,
+      id: 2,
       name: "Vanshdeep",
       role: "Full Stack & AI Developer",
       photo: "/Developer/vanshdeep.jpg",
@@ -53,7 +31,29 @@ const DeveloperTeam = () => {
       skills: ["Vue.js", "Tailwind", "JavaScript"]
     },
     {
-      id: 6,
+      id: 3,
+      name: "Devender Singh",
+      role: "Full Stack & DevOps Engineer",
+      photo: "/Developer/devender.jpg",
+      linkedin: "https://www.linkedin.com/in/devender-singh-520a5321b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com/davidkim",
+      email: "david@company.com",
+      skills: ["ReactJs Vite", "AWS", "Azure"]
+    },
+    
+    {
+      id: 4,
+      name: "Rishabh ",
+      role: "Lead Full Stack Developer | Deployement | AI & Integration | CEH Certified | Cyber Security Analyst | UI/UX | Marketing & Branding | Graphic and Media Production",
+      photo: "/Developer/rishabh.JPG",
+      linkedin: "#",
+      github: "#",
+      email: "#",
+      skills: ["React", "Node.js", "TypeScript"]
+    },
+    
+    {
+      id: 5,
       name: "Kritika Verma",
       role: "Frontend Developer",
       photo: "/Developer/kritika3.jpg",
@@ -63,7 +63,7 @@ const DeveloperTeam = () => {
       skills: ["React Js", "Tailwind Css", "Wordpress"]
     }, 
     {
-      id: 2,
+      id: 6,
       name: "Aman Raj",
       role: "Cloud & DevOps Engineer",
       photo: "/Developer/Aman.jpg",
