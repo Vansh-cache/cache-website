@@ -1,20 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, X, ArrowRight } from 'lucide-react';
+import { ChevronDown, X, ArrowRight, Check, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-interface CapabilitySubtopic {
-  name: string;
-  description: string;
-}
-
-interface Capability {
-  name: string;
-  icon: string;
-  subtopics: CapabilitySubtopic[];
-}
-
-const capabilities: Capability[] = [
+const capabilities = [
   {
     name: 'Audit & Consult',
     icon: '🔍',
@@ -61,16 +50,7 @@ const capabilities: Capability[] = [
   }
 ];
 
-// Legacy data for case studies dropdown
-interface ItemData {
-  name: string;
-  description: string;
-  image: string;
-  benefits: string[];
-  approach: string[];
-}
-
-const caseStudyData: Record<string, ItemData> = {
+const caseStudyData = {
   'Telecom': {
     name: 'Telecom Network Modernization',
     description: 'Transformed a major telecom operator\'s infrastructure with 5G deployment, network optimization, and digital service platforms that increased network efficiency by 45% and customer satisfaction by 35%.',
@@ -128,24 +108,20 @@ export default function CacheSolutionsSection() {
   const navigate = useNavigate();
   const [capabilitiesOpen, setCapabilitiesOpen] = useState(false);
   const [caseStudiesOpen, setCaseStudiesOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<ItemData | null>(null);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [definitionOpen, setDefinitionOpen] = useState(false);
   
-  // State for capability selection and nested dropdown
-  const [selectedCapability, setSelectedCapability] = useState<Capability | null>(null);
-  const [selectedSubtopic, setSelectedSubtopic] = useState<CapabilitySubtopic | null>(null);
+  const [selectedCapability, setSelectedCapability] = useState(null);
+  const [selectedSubtopic, setSelectedSubtopic] = useState(null);
   const [explanationOpen, setExplanationOpen] = useState(false);
   const [doorSliderOpen, setDoorSliderOpen] = useState(false);
-  const [selectedAuditSubtopic, setSelectedAuditSubtopic] = useState<CapabilitySubtopic | null>(null);
+  const [selectedAuditSubtopic, setSelectedAuditSubtopic] = useState(null);
   
-  // Reference for dropdown container
-  const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const dropdownRef = React.useRef(null);
   
-  // Handle click outside to close dropdowns
   React.useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        // Close all dropdowns and reset states
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setCapabilitiesOpen(false);
         setCaseStudiesOpen(false);
         setSelectedCapability(null);
@@ -153,15 +129,13 @@ export default function CacheSolutionsSection() {
         setSelectedAuditSubtopic(null);
         setSelectedSubtopic(null);
         setExplanationOpen(false);
-        setDefinitionOpen(false); // Ensure definition popup is closed
-        setSelectedItem(null); // Reset selected case study item
+        setDefinitionOpen(false);
+        setSelectedItem(null);
       }
     }
     
-    // Add event listener
     document.addEventListener('mousedown', handleClickOutside);
     
-    // Clean up
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -170,10 +144,8 @@ export default function CacheSolutionsSection() {
   const toggleCapabilities = () => {
     setCapabilitiesOpen(!capabilitiesOpen);
     if (caseStudiesOpen) setCaseStudiesOpen(false);
-    // Reset selected capability when closing
     if (capabilitiesOpen) {
       setSelectedCapability(null);
-      // Close door slider and reset subtopics when closing capabilities dropdown
       setDoorSliderOpen(false);
       setSelectedAuditSubtopic(null);
       setSelectedSubtopic(null);
@@ -184,7 +156,6 @@ export default function CacheSolutionsSection() {
   const toggleCaseStudies = () => {
     setCaseStudiesOpen(!caseStudiesOpen);
     if (capabilitiesOpen) setCapabilitiesOpen(false);
-    // Reset all states when closing case studies dropdown
     if (caseStudiesOpen) {
       setSelectedItem(null);
       setDefinitionOpen(false);
@@ -196,23 +167,20 @@ export default function CacheSolutionsSection() {
     }
   };
 
-  const selectCapabilityCategory = (capability: Capability) => {
+  const selectCapabilityCategory = (capability) => {
     if (selectedCapability?.name === capability.name) {
       setSelectedCapability(null);
-      // Close door slider when collapsing any capability
       setDoorSliderOpen(false);
       setSelectedAuditSubtopic(null);
     } else {
       setSelectedCapability(capability);
-      // Open door slider when selecting any capability
       setDoorSliderOpen(true);
-      setSelectedItem(null); // Clear any selected industry item
+      setSelectedItem(null);
     }
-    // Close the dropdown after selection
     setCapabilitiesOpen(false);
   };
 
-  const selectAuditSubtopic = (subtopic: CapabilitySubtopic) => {
+  const selectAuditSubtopic = (subtopic) => {
     setSelectedAuditSubtopic(subtopic);
     setExplanationOpen(true);
     setSelectedSubtopic(subtopic);
@@ -224,7 +192,7 @@ export default function CacheSolutionsSection() {
     setSelectedCapability(null);
   };
 
-  const selectSubtopic = (subtopic: CapabilitySubtopic) => {
+  const selectSubtopic = (subtopic) => {
     setSelectedSubtopic(subtopic);
     setExplanationOpen(true);
   };
@@ -234,14 +202,13 @@ export default function CacheSolutionsSection() {
     setSelectedSubtopic(null);
   };
 
-  const selectItem = (itemName: string) => {
+  const selectItem = (itemName) => {
     const data = caseStudyData[itemName];
     if (data) {
       setSelectedItem(data);
       setCapabilitiesOpen(false);
       setCaseStudiesOpen(false);
       setSelectedCapability(null);
-      // Close door slider when selecting a case study
       setDoorSliderOpen(false);
       setSelectedAuditSubtopic(null);
     }
@@ -255,7 +222,6 @@ export default function CacheSolutionsSection() {
 
   const handleLearnMore = () => {
     if (selectedItem) {
-      // Navigate to insights page with the selected case study name as a URL parameter and scroll to success-stories section
       navigate(`/insights?activeStudy=${encodeURIComponent(selectedItem.name)}#success-stories`);
     }
   };
@@ -268,7 +234,7 @@ export default function CacheSolutionsSection() {
     hidden: { 
       opacity: 0, 
       y: -10,
-      transition: { duration: 0.2 }
+      transition: { duration: 0.2, ease: "easeOut" }
     },
     visible: { 
       opacity: 1, 
@@ -282,7 +248,7 @@ export default function CacheSolutionsSection() {
       opacity: 0, 
       scale: 0.9, 
       y: 20,
-      transition: { duration: 0.3 }
+      transition: { duration: 0.3, ease: "easeOut" }
     },
     visible: { 
       opacity: 1, 
@@ -297,7 +263,7 @@ export default function CacheSolutionsSection() {
       opacity: 0, 
       scale: 0.95, 
       y: 30,
-      transition: { duration: 0.4 }
+      transition: { duration: 0.4, ease: "easeOut" }
     },
     visible: { 
       opacity: 1, 
@@ -328,303 +294,267 @@ export default function CacheSolutionsSection() {
     },
     visible: { 
       scaleX: 1,
-      transformOrigin: "left", 
+      transformOrigin: "left",
       transition: { duration: 0.4, ease: "easeInOut", delay: 0.2 }
     }
   };
 
   return (
     <section className="bg-black min-h-[50vh] flex flex-col lg:flex-row">
-      {/* Left Half - Content */}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-8 lg:px-16 py-8 lg:py-0">
         <div className="w-full max-w-lg">
-          {/* Section Heading */}
           <div className="mb-12">
             <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-4">
               Let Cache Solve your Problems
             </h1>
-            {/* <p className="text-white/80 mt-6 text-lg">
-              While you maximize your growth
-            </p> */}
           </div>
 
-          {/* Choose your interest text */}
           <div className="mb-6">
             <p className="text-white/90 text-lg">
               Choose your interest
             </p>
           </div>
 
-          {/* Dropdown Controls */}
-           <div className="flex flex-row gap-4 mb-8" ref={dropdownRef}>
-               
-               {/* Capabilities Dropdown */}
-               <div className="relative flex-1">
-                 <button 
-                   className={`w-full ${selectedCapability ? 'bg-red-600' : 'bg-transparent'} border border-white/30 rounded-lg px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white/50`}
-                   onClick={toggleCapabilities}
-                   data-testid="button-capabilities"
-                 >
-                   <span className="text-white font-medium">{selectedCapability ? selectedCapability.name : 'Capabilities'}</span>
-                   <motion.div
-                     animate={{ rotate: capabilitiesOpen ? 180 : 0 }}
-                     transition={{ duration: 0.2 }}
-                   >
-                     <ChevronDown className="h-5 w-5 text-white/70" />
-                   </motion.div>
-                 </button>
-                 
-                 <AnimatePresence>
-                   {capabilitiesOpen && (
-                     <motion.div 
-                       className="absolute top-full left-0 right-0 mt-2 bg-black border border-white/30 rounded-lg shadow-lg z-100"
-                       variants={dropdownVariants}
-                       initial="hidden"
-                       animate="visible"
-                       exit="hidden"
-                       data-testid="menu-capabilities"
-                     >
-                       <div className="p-2">
-                         {capabilities.map((capability) => (
-                           <div key={capability.name} className="mb-1 last:mb-0">
-                             <button 
-                               className="w-full text-left px-4 py-3 text-white hover:bg-red-600 rounded-md transition-colors duration-150"
-                               onClick={() => selectCapabilityCategory(capability)}
-                               data-testid={`capability-${capability.name.toLowerCase().replace(/\s+/g, '-')}`}
-                             >
-                               <span className="font-medium">{capability.name}</span>
-                             </button>
-                             
-                             {/* Nested Subtopics Dropdown - Hide for all capabilities (they now appear in door slider) */}
-                             <AnimatePresence>
-                               {false && (
-                                 <motion.div
-                                   className="ml-4 mt-2 bg-white/5 rounded-md border border-white/20"
-                                   initial={{ opacity: 0, height: 0 }}
-                                   animate={{ opacity: 1, height: "auto" }}
-                                   exit={{ opacity: 0, height: 0 }}
-                                   transition={{ duration: 0.2 }}
-                                 >
-                                   <div className="p-2">
-                                     {capability.subtopics.map((subtopic) => (
-                                       <button 
-                                         key={subtopic.name}
-                                         className="w-full text-left px-3 py-2 text-white/80 hover:bg-white/10 rounded-md transition-colors duration-150 text-sm"
-                                         onClick={() => selectSubtopic(subtopic)}
-                                         data-testid={`subtopic-${subtopic.name.toLowerCase().replace(/\s+/g, '-')}`}
-                                       >
-                                         {subtopic.name}
-                                       </button>
-                                     ))}
-                                   </div>
-                                 </motion.div>
-                               )}
-                             </AnimatePresence>
-                           </div>
-                         ))}
-                       </div>
-                     </motion.div>
-                   )}
-                 </AnimatePresence>
-               </div>
-
-              {/* Case Studies Dropdown */}
-              <div className="relative flex-1">
-                <button 
-                  className={`w-full ${selectedItem ? 'bg-red-600' : 'bg-transparent'} border border-white/30 rounded-lg px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white/50`}
-                  onClick={toggleCaseStudies}
-                  data-testid="button-case-studies"
+          <div className="flex flex-row gap-4 mb-8" ref={dropdownRef}>
+            <div className="relative flex-1">
+              <button 
+                className={`w-full ${selectedCapability ? 'bg-red-600' : 'bg-transparent'} border border-white/30 rounded-lg px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white/50`}
+                onClick={toggleCapabilities}
+                data-testid="button-capabilities"
+              >
+                <span className="text-white font-medium">{selectedCapability ? selectedCapability.name : 'Capabilities'}</span>
+                <motion.div
+                  animate={{ rotate: capabilitiesOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  <span className="text-white font-medium">{selectedItem ? Object.keys(caseStudyData).find(key => caseStudyData[key] === selectedItem) : 'Case Studies'}</span>
-                  <motion.div
-                    animate={{ rotate: caseStudiesOpen ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <ChevronDown className="h-5 w-5 text-white/70" />
-                  </motion.div>
-                </button>
-                
-                <AnimatePresence>
-                  {caseStudiesOpen && (
-                    <motion.div 
-                      className="absolute top-full left-0 right-0 mt-2 bg-black border border-white/30 rounded-lg shadow-lg z-100"
-                      variants={dropdownVariants}
-                      initial="hidden"
-                      animate="visible"
-                      exit="hidden"
-                      data-testid="menu-case-studies"
-                    >
-                      <div className="p-2">
-                        {caseStudyItems.map((item) => (
-                          <button 
-                            key={item}
-                            className="w-full text-left px-4 py-3 text-white hover:bg-red-600 rounded-md transition-colors duration-150"
-                            onClick={() => selectItem(item)}
-                            data-testid={`case-study-${item.toLowerCase().replace(/\s+/g, '-').replace('&', 'and')}`}
-                          >
-                            {item}
-                          </button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+                  <ChevronDown className="h-5 w-5 text-white/70" />
+                </motion.div>
+              </button>
               
-          </div>
-        </div>
-      </div>
-
-      {/* Right Half - Visualization */}
-      <div className="w-full lg:w-1/2 relative min-h-[50vh] lg:h-[80vh] overflow-hidden" style={{
-        filter: definitionOpen ? 'blur(8px)' : 'none'
-      }}>
-              {/* Handshake Image (use requested asset) */}
-              <img 
-                src="/public/girl-hand.jpg" 
-                alt="Business handshake" 
-                className="absolute inset-0 w-full h-full object-cover" 
-                loading="lazy"
-                decoding="async"
-              />
-
-              {/* Women Owned badge overlay - top-right */}
-              <img
-                src="/women_owned.png"
-                alt="Women Owned"
-                className="absolute top-0 right-3 md:top-0 md:right-4 w-20 md:w-24 lg:w-28 h-auto z-30 drop-shadow-lg"
-              />
-
-              {/* Tile Card */}
               <AnimatePresence>
-                {selectedItem && (
+                {capabilitiesOpen && (
                   <motion.div 
-                    className="absolute bottom-4 left-4 right-4 lg:bottom-6 lg:left-6 lg:right-6 bg-black/20 backdrop-blur-md rounded-xl p-4 lg:p-6 shadow-xl border border-white/30"
-                    variants={tileVariants}
+                    className="absolute top-full left-0 right-0 mt-2 bg-black border border-white/30 rounded-lg shadow-lg z-100"
+                    variants={dropdownVariants}
                     initial="hidden"
                     animate="visible"
                     exit="hidden"
-                    style={{
-                      filter: definitionOpen ? 'blur(4px)' : 'none'
-                    }}
-                    data-testid="card-tile"
+                    data-testid="menu-capabilities"
                   >
-                    <div className="flex flex-col gap-4">
-                      <h2 className="text-2xl font-bold text-white" data-testid="text-tile-title">
-                        {Object.keys(caseStudyData).find(key => caseStudyData[key] === selectedItem) || selectedItem.name}
-                      </h2>
-                      <p className="text-white/80" data-testid="text-tile-description">
-                        Our {selectedItem.name.toLowerCase()} experts help industry players navigate their day-to-day operations.
-                      </p>
-                      <div className="mt-4">
-                        <button 
-                          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center gap-2 transition-colors"
-                          onClick={handleLearnMore}
-                        >
-                          LEARN MORE <span className="text-lg">→</span>
-                        </button>
-                      </div>
+                    <div className="p-2">
+                      {capabilities.map((capability) => (
+                        <div key={capability.name} className="mb-1 last:mb-0">
+                          <button 
+                            className="w-full text-left px-4 py-3 text-white hover:bg-red-600 rounded-md transition-colors duration-150"
+                            onClick={() => selectCapabilityCategory(capability)}
+                            data-testid={`capability-${capability.name.toLowerCase().replace(/\s+/g, '-')}`}
+                          >
+                            <span className="font-medium">{capability.name}</span>
+                          </button>
+                          
+                          <AnimatePresence>
+                            {false && (
+                              <motion.div
+                                className="ml-4 mt-2 bg-white/5 rounded-md border border-white/20"
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                              >
+                                <div className="p-2">
+                                  {capability.subtopics.map((subtopic) => (
+                                    <button 
+                                      key={subtopic.name}
+                                      className="w-full text-left px-3 py-2 text-white/80 hover:bg-white/10 rounded-md transition-colors duration-150 text-sm"
+                                      onClick={() => selectSubtopic(subtopic)}
+                                      data-testid={`subtopic-${subtopic.name.toLowerCase().replace(/\s+/g, '-')}`}
+                                    >
+                                      {subtopic.name}
+                                    </button>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      ))}
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
 
-              {/* Door Slider for Audit Subtopics */}
+            <div className="relative flex-1">
+              <button 
+                className={`w-full ${selectedItem ? 'bg-red-600' : 'bg-transparent'} border border-white/30 rounded-lg px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white/50`}
+                onClick={toggleCaseStudies}
+                data-testid="button-case-studies"
+              >
+                <span className="text-white font-medium">{selectedItem ? Object.keys(caseStudyData).find(key => caseStudyData[key] === selectedItem) : 'Case Studies'}</span>
+                <motion.div
+                  animate={{ rotate: caseStudiesOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="h-5 w-5 text-white/70" />
+                </motion.div>
+              </button>
+              
               <AnimatePresence>
-                {doorSliderOpen && (
-                  <motion.div
-                    className="absolute inset-0 z-20"
-                    variants={doorSliderVariants}
-                    initial="closed"
-                    animate="open"
-                    exit="closed"
-                    data-testid="door-slider"
+                {caseStudiesOpen && (
+                  <motion.div 
+                    className="absolute top-full left-0 right-0 mt-2 bg-black border border-white/30 rounded-lg shadow-lg z-100"
+                    variants={dropdownVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                    data-testid="menu-case-studies"
                   >
-                    {/* Left Door Panel (hidden on mobile) */}
-                    <motion.div
-                      className="absolute left-0 top-0 w-1/2 h-full bg-black/20 backdrop-blur-sm hidden md:block"
-                      variants={doorPanelVariants}
-                      initial="closed"
-                      animate="open"
-                      exit="closed"
-                      custom="left"
-                    />
-                    
-                    {/* Right Door Panel (hidden on mobile) */}
-                    <motion.div
-                      className="absolute right-0 top-0 w-1/2 h-full bg-black/20 backdrop-blur-sm hidden md:block"
-                      variants={doorPanelVariants}
-                      initial="closed"
-                      animate="open"
-                      exit="closed"
-                      custom="right"
-                    />
-
-                    {/* Subtopic Cards Container */}
-                    <motion.div
-                      className="absolute inset-0 flex items-start justify-start md:items-center md:justify-center p-2 sm:p-6 overflow-y-auto"
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      transition={{ delay: 0.3, duration: 0.4 }}
-                    >
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 max-w-3xl w-full">
-                        {selectedCapability?.subtopics.map((subtopic, index) => (
-                          <motion.div
-                            key={subtopic.name}
-                            className={`bg-white/10 backdrop-blur-sm rounded-xl p-2 border border-white/20 cursor-pointer hover:bg-white/20 transition-all duration-300 flex flex-col justify-between
-                              ${selectedAuditSubtopic === subtopic.name ? 'ring-2 ring-white/50 bg-white/20' : ''}`}
-                            style={{
-                              wordBreak: 'break-word',
-                              overflow: 'hidden'
-                            }}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 + index * 0.1, duration: 0.3 }}
-                            onClick={() => selectAuditSubtopic(subtopic)}
-                            data-testid={`subtopic-card-${subtopic.name.toLowerCase().replace(/\s+/g, '-')}`}
-                          >
-                            <div className="flex justify-between items-start">
-                              <h3 className="text-white font-semibold text-base mb-2">
-                                {subtopic.name}
-                              </h3>
-                              <button 
-                                className="bg-red-600 hover:bg-red-700 rounded-full p-1 transition-colors"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  selectAuditSubtopic(subtopic);
-                                  showDefinition();
-                                }}
-                              >
-                                <ArrowRight className="h-4 w-4 text-white" />
-                              </button>
-                            </div>
-                            <p className="text-white/80 text-sm leading-relaxed break-words" style={{ flex: 1 }}>
-                              {subtopic.description}
-                            </p>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </motion.div>
-
-                    {/* Close Button */}
-                    {/* <motion.button
-                      className="absolute top-6 right-6 z-30 bg-white/10 backdrop-blur-sm rounded-full p-3 border border-white/20 hover:bg-white/20 transition-all duration-300"
-                      onClick={closeDoorSlider}
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0 }}
-                      transition={{ delay: 0.5, duration: 0.3 }}
-                      data-testid="close-door-slider"
-                    >
-                      <X className="w-6 h-6 text-white" />
-                    </motion.button> */}
+                    <div className="p-2">
+                      {caseStudyItems.map((item) => (
+                        <button 
+                          key={item}
+                          className="w-full text-left px-4 py-3 text-white hover:bg-red-600 rounded-md transition-colors duration-150"
+                          onClick={() => selectItem(item)}
+                          data-testid={`case-study-${item.toLowerCase().replace(/\s+/g, '-').replace('&', 'and')}`}
+                        >
+                          {item}
+                        </button>
+                      ))}
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Definition Modal */}
+      <div className="w-full lg:w-1/2 relative min-h-[50vh] lg:h-[80vh] overflow-hidden" style={{
+        filter: definitionOpen ? 'blur(8px)' : 'none'
+      }}>
+        <img 
+          src="/public/girl-hand.jpg" 
+          alt="Business handshake" 
+          className="absolute inset-0 w-full h-full object-cover" 
+          loading="lazy"
+          decoding="async"
+        />
+
+        <img
+          src="/women_owned.png"
+          alt="Women Owned"
+          className="absolute top-0 right-3 md:top-0 md:right-4 w-20 md:w-24 lg:w-28 h-auto z-30 drop-shadow-lg"
+        />
+
+        <AnimatePresence>
+          {selectedItem && (
+            <motion.div 
+              className="absolute bottom-4 left-4 right-4 lg:bottom-6 lg:left-6 lg:right-6 bg-black/20 backdrop-blur-md rounded-xl p-4 lg:p-6 shadow-xl border border-white/30"
+              variants={tileVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              style={{
+                filter: definitionOpen ? 'blur(4px)' : 'none'
+              }}
+              data-testid="card-tile"
+            >
+              <div className="flex flex-col gap-4">
+                <h2 className="text-2xl font-bold text-white" data-testid="text-tile-title">
+                  {Object.keys(caseStudyData).find(key => caseStudyData[key] === selectedItem) || selectedItem.name}
+                </h2>
+                <p className="text-white/80" data-testid="text-tile-description">
+                  Our {selectedItem.name.toLowerCase()} experts help industry players navigate their day-to-day operations.
+                </p>
+                <div className="mt-4">
+                  <button 
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center gap-2 transition-colors"
+                    onClick={handleLearnMore}
+                  >
+                    LEARN MORE <span className="text-lg">→</span>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {doorSliderOpen && (
+            <motion.div
+              className="absolute inset-0 z-20"
+              variants={doorSliderVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              data-testid="door-slider"
+            >
+              <motion.div
+                className="absolute left-0 top-0 w-1/2 h-full bg-black/20 backdrop-blur-sm hidden md:block"
+                variants={doorPanelVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+              />
+              
+              <motion.div
+                className="absolute right-0 top-0 w-1/2 h-full bg-black/20 backdrop-blur-sm hidden md:block"
+                variants={doorPanelVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+              />
+
+              <motion.div
+                className="absolute inset-0 flex items-start justify-start md:items-center md:justify-center p-2 sm:p-6 overflow-y-auto"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 max-w-3xl w-full">
+                  {selectedCapability?.subtopics.map((subtopic, index) => (
+                    <motion.div
+                      key={subtopic.name}
+                      className={`bg-white/10 backdrop-blur-sm rounded-xl p-2 border border-white/20 cursor-pointer hover:bg-white/20 transition-all duration-300 flex flex-col justify-between
+                        ${selectedAuditSubtopic === subtopic ? 'ring-2 ring-white/50 bg-white/20' : ''}`}
+                      style={{
+                        wordBreak: 'break-word',
+                        overflow: 'hidden'
+                      }}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 + index * 0.1, duration: 0.3 }}
+                      onClick={() => selectAuditSubtopic(subtopic)}
+                      data-testid={`subtopic-card-${subtopic.name.toLowerCase().replace(/\s+/g, '-')}`}
+                    >
+                      <div className="flex justify-between items-start">
+                        <h3 className="text-white font-semibold text-base mb-2">
+                          {subtopic.name}
+                        </h3>
+                        <button 
+                          className="bg-red-600 hover:bg-red-700 rounded-full p-1 transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            selectAuditSubtopic(subtopic);
+                            showDefinition();
+                          }}
+                        >
+                          <ArrowRight className="h-4 w-4 text-white" />
+                        </button>
+                      </div>
+                      <p className="text-white/80 text-sm leading-relaxed break-words" style={{ flex: 1 }}>
+                        {subtopic.description}
+                      </p>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
       <AnimatePresence>
         {definitionOpen && selectedItem && (
           <motion.div 
@@ -649,7 +579,6 @@ export default function CacheSolutionsSection() {
                 data-testid="card-definition"
               >
                 <div className="overflow-y-auto max-h-full">
-                  {/* Card Header */}
                   <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
                     <div className="flex items-center gap-4 sm:gap-6">
                       <img 
@@ -671,7 +600,6 @@ export default function CacheSolutionsSection() {
                     </button>
                   </div>
 
-                  {/* Card Content */}
                   <div className="p-4 sm:p-6">
                     <div className="max-w-none">
                       <p className="text-black text-base sm:text-lg leading-relaxed mb-6" data-testid="text-definition-description">
@@ -712,53 +640,47 @@ export default function CacheSolutionsSection() {
         )}
       </AnimatePresence>
 
-      {/* Explanation Modal */}
-        <AnimatePresence>
-          {explanationOpen && selectedSubtopic && (
+      <AnimatePresence>
+        {explanationOpen && selectedSubtopic && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeExplanation}
+          >
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+            
             <motion.div
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={closeExplanation}
+              className="relative bg-white rounded-xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
             >
-              {/* Blur Background */}
-              <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-              
-              {/* Modal Content */}
-              <motion.div
-                className="relative bg-white rounded-xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
+              <button
+                onClick={closeExplanation}
+                className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
               >
-                {/* Close Button */}
-                <button
-                  onClick={closeExplanation}
-                  className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
-                >
-                  <X className="w-6 h-6 text-gray-600" />
-                </button>
+                <X className="w-6 h-6 text-gray-600" />
+              </button>
 
-                {/* Modal Header */}
-                <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                    {selectedSubtopic.name}
-                  </h2>
-                  <div className="w-16 h-1 bg-blue-500 rounded"></div>
-                </div>
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  {selectedSubtopic.name}
+                </h2>
+                <div className="w-16 h-1 bg-blue-500 rounded"></div>
+              </div>
 
-                {/* Modal Content */}
-                <div className="prose prose-gray max-w-none">
-                  <p className="text-gray-700 leading-relaxed">
-                    {selectedSubtopic.description}
-                  </p>
-                </div>
-              </motion.div>
+              <div className="prose prose-gray max-w-none">
+                <p className="text-gray-700 leading-relaxed">
+                  {selectedSubtopic.description}
+                </p>
+              </div>
             </motion.div>
-          )}
-        </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
