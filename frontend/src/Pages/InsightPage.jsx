@@ -6,6 +6,7 @@ import { BlogSection } from "../components/InsightComponent/blog-section";
 import { CaseStudiesSection } from "../components/InsightComponent/case-studies-section";
 
 import { EventsSection } from "../components/InsightComponent/events-section";
+import { ProblemsAndDiagnosticsSection } from "../components/InsightComponent/problems-and-diagnostics-section";
 
 
 export default function InsightPage() {
@@ -32,6 +33,7 @@ export default function InsightPage() {
       <main>
         <HeroSection />
         <CEOSection />
+        <ProblemsAndDiagnosticsSection />
         <BlogSection />
         <CaseStudiesSection />
         <EventsSection />
